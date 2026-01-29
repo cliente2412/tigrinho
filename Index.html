@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>🐯 Tigrinho Ultimate</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --gold:#ffb300;
+  --dark:#0d0d0d;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:radial-gradient(circle,#222,#000);
+  font-family:Arial, Helvetica, sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  color:#fff;
+}
+.game{
+  background:#141414;
+  width:360px;
+  padding:20px;
+  border-radius:18px;
+  box-shadow:0 0 40px var(--gold);
+  text-align:center;
+}
+h1{
+  color:var(--gold);
+  margin-bottom:5px;
+}
+.balance{
+  font-size:18px;
+  margin-bottom:10px;
+}
+.slots{
+  display:flex;
+  justify-content:space-between;
+  margin:20px 0;
+}
+.slot{
+  width:90px;
+  height:90px;
+  background:#000;
+  border:3px solid var(--gold);
+  border-radius:12px;
+  font-size:50px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  animation:spin .4s;
+}
+@keyframes spin{
+  from{transform:rotateX(90deg)}
+  to{transform:rotateX(0)}
+}
+.controls{
+  display:flex;
+  gap:8px;
+}
+button{
+  flex:1;
+  background:var(--gold);
+  border:none;
+  padding:14px;
+  font-size:16px;
+  border-radius:10px;
+  cursor:pointer;
+}
+button:hover{
+  background:#ffc107;
+}
+.result{
+  margin-top:10px;
+  min-height:24px;
+  font-size:18px;
+}
+.log{
+  margin-top:8px;
+  font-size:12px;
+  opacity:.8;
+}
+.footer{
+  margin-top:10px;
+  font-size:11px;
+  opacity:.6;
+}
+</style>
+</head>
+
+<body>
+
+<div class="game">
+  <h1>🐯 Tigrinho Ultimate</h1>
+  <div class="balance">💰 Saldo: <span id="saldo">200</span> moedas</div>
+
+  <div class="slots">
+    <div class="slot" id="s1">🐯</div>
+    <div class="slot" id="s2">🐯</div>
+    <div class="slot" id="s3">🐯</div>
+  </div>
+
+  <div class="controls">
+    <button onclick="girar()">🎰 Girar</button>
+    <button onclick="bonus()">⭐ Bônus</button>
+    <button onclick="resetar()">🔄</button>
+  </div>
+
+  <div class="result" id="resultado"></div>
+  <div class="log" id="log"></div>
+  <div class="footer">Jogo demo • Apenas diversão</div>
+</div>
+
+<script>
+const simbolos = ["🐯","🍒","🍋","💎","🔥","⭐"];
+let saldo = 200;
+const aposta = 20;
+
+const s1 = document.getElementById("s1");
+const s2 = document.getElementById("s2");
+const s3 = document.getElementById("s3");
+const saldoEl = document.getElementById("saldo");
+const resultado = document.getElementById("resultado");
+const log = document.getElementById("log");
+
+function random(){
+  return simbolos[Math.floor(Math.random()*simbolos.length)];
+}
+
+function girar(){
+  if(saldo < aposta){
+    mostrar("❌ Saldo insuficiente");
+    return;
+  }
+
+  saldo -= aposta;
+  atualizar();
+
+  let a = random();
+  let b = random();
+  let c = random();
+
+  s1.innerText = a;
+  s2.innerText = b;
+  s3.innerText = c;
+
+  if(a === b && b === c){
+    let multiplicador = a === "🐯" ? 10 : 5;
+    let premio = aposta * multiplicador;
+    saldo += premio;
+    mostrar("🎉 GANHOU " + premio + " moedas!");
+  }else{
+    mostrar("😅 Não foi dessa vez");
+  }
+
+  atualizar();
+}
+
+function bonus(){
+  if(Math.random() < 0.4){
+    saldo += 50;
+    mostrar("⭐ BÔNUS +50 moedas!");
+  }else{
+    mostrar("❌ Sem bônus");
+  }
+  atualizar();
+}
+
+function resetar(){
+  saldo = 200;
+  mostrar("🔄 Jogo reiniciado");
+  atualizar();
+}
+
+function atualizar(){
+  saldoEl.innerText = saldo;
+}
+
+function mostrar(msg){
+  resultado.innerText = msg;
+  log.innerText = "Última jogada: " + msg;
+}
+</script>
+
+</body>
+</html>
